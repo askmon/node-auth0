@@ -55,14 +55,22 @@ utils.wrapPropertyMethod = function (Parent, name, propertyMethod) {
  * @memberOf  module:utils
  */
 utils.getRequestPromise = function (settings) {
+  var options = {
+    url: settings.url,
+    method: settings.method,
+    body: settings.data,
+    json: typeof settings.data === 'object',
+    headers: settings.headers
+  }
+  if(process.env.PROXY_HOST) {
+    let proxyHost = `${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
+    if(proxyHost.indexOf('http') === -1) {
+      proxyHost = `http://${proxyHost}`
+    }
+    options.proxy = proxyHost;
+  }
   return new Promise(function (resolve, reject) {
-    request({
-      url: settings.url,
-      method: settings.method,
-      body: settings.data,
-      json: typeof settings.data === 'object',
-      headers: settings.headers
-    }, function (err, res, body) {
+    request(options, function (err, res, body) {
        if (err) {
         reject(err);
         return;
@@ -70,6 +78,6 @@ utils.getRequestPromise = function (settings) {
 
       resolve(res.body);
     });
-    
+
   });
 }
