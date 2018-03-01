@@ -16,6 +16,13 @@ var Auth0RestClient = function (resourceUrl, options, provider) {
   }
 
   this.options = options;
+  if(process.env.PROXY_HOST) {
+    let proxyHost = process.env.PROXY_HOST
+    if(proxyHost.indexOf('http') === -1) {
+      proxyHost = `http://${proxyHost}`
+    }
+    options.proxy = `${proxyHost}:${process.env.PROXY_PORT}`
+  }
   this.provider = provider;
   this.restClient = new RestClient(resourceUrl, options);
 
