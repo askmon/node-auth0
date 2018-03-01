@@ -42,7 +42,6 @@ var DatabaseAuthenticator = function (options, oauth) {
     }
     clientOptions.proxy = `${proxyHost}:${process.env.PROXY_PORT}`
   }
-  this.provider = provider;
   this.dbConnections = new RestClient(options.baseUrl + '/dbconnections/:type', clientOptions);
   this.clientId = options.clientId;
 };
